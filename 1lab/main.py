@@ -14,7 +14,7 @@ class Piece:
         return False
 
 
-class Pawn(Piece):
+class Pawn(Piece): # пешка
     def get_symbol(self):
         return "P" if self.color == "white" else "p"
     
@@ -37,7 +37,7 @@ class Pawn(Piece):
         return False
 
 
-class Rook(Piece):
+class Rook(Piece): # ладья
     def get_symbol(self):
         return "R" if self.color == "white" else "r"
     
@@ -60,7 +60,7 @@ class Rook(Piece):
         return target is None or target.color != self.color
 
 
-class Knight(Piece):
+class Knight(Piece): # конь
     def get_symbol(self):
         return "N" if self.color == "white" else "n"
     
@@ -74,7 +74,7 @@ class Knight(Piece):
         return False
 
 
-class Bishop(Piece):
+class Bishop(Piece): # слон
     def get_symbol(self):
         return "B" if self.color == "white" else "b"
     
@@ -100,7 +100,7 @@ class Bishop(Piece):
         return target is None or target.color != self.color
 
 
-class Queen(Piece):
+class Queen(Piece): # королева
     def get_symbol(self):
         return "Q" if self.color == "white" else "q"
     
@@ -141,7 +141,7 @@ class Queen(Piece):
         return False
 
 
-class King(Piece):
+class King(Piece): # король
     def get_symbol(self):
         return "K" if self.color == "white" else "k"
     
