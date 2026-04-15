@@ -14,7 +14,7 @@ class Piece:
         return False
 
 
-class Pawn(Piece): # пешка
+class Pawn(Piece):
     def get_symbol(self):
         return "P" if self.color == "white" else "p"
     
@@ -37,7 +37,7 @@ class Pawn(Piece): # пешка
         return False
 
 
-class Rook(Piece): # ладья
+class Rook(Piece):
     def get_symbol(self):
         return "R" if self.color == "white" else "r"
     
@@ -60,7 +60,7 @@ class Rook(Piece): # ладья
         return target is None or target.color != self.color
 
 
-class Knight(Piece): # конь
+class Knight(Piece):
     def get_symbol(self):
         return "N" if self.color == "white" else "n"
     
@@ -74,7 +74,7 @@ class Knight(Piece): # конь
         return False
 
 
-class Bishop(Piece): # слон
+class Bishop(Piece):
     def get_symbol(self):
         return "B" if self.color == "white" else "b"
     
@@ -100,7 +100,7 @@ class Bishop(Piece): # слон
         return target is None or target.color != self.color
 
 
-class Queen(Piece): # королева
+class Queen(Piece):
     def get_symbol(self):
         return "Q" if self.color == "white" else "q"
     
@@ -141,7 +141,7 @@ class Queen(Piece): # королева
         return False
 
 
-class King(Piece): # король
+class King(Piece):
     def get_symbol(self):
         return "K" if self.color == "white" else "k"
     
@@ -548,22 +548,22 @@ class CheckersGame:
 # история ходов и откат хода назад
 
 # класс для хранения информации о ходе
-# class Move:
-    # def __init__(self, start_row, start_col, end_row, end_col, piece, captured_piece=None):
-        # self.start_row = start_row
-        # self.start_col = start_col
-        # self.end_row = end_row
-        # self.end_col = end_col
-        # self.piece = piece
-        # self.captured_piece = captured_piece
-        # self.piece_has_moved = piece.has_moved if piece else False
+class Move:
+    def __init__(self, start_row, start_col, end_row, end_col, piece, captured_piece=None):
+        self.start_row = start_row
+        self.start_col = start_col
+        self.end_row = end_row
+        self.end_col = end_col
+        self.piece = piece
+        self.captured_piece = captured_piece
+        self.piece_has_moved = piece.has_moved if piece else False
     
-    # def get_coordinates_string(self):
-        # start_file = chr(ord('a') + self.start_col)
-        # start_rank = str(8 - self.start_row)
-        # end_file = chr(ord('a') + self.end_col)
-        # end_rank = str(8 - self.end_row)
-        # return f"{start_file}{start_rank} -> {end_file}{end_rank}"
+    def get_coordinates_string(self):
+        start_file = chr(ord('a') + self.start_col)
+        start_rank = str(8 - self.start_row)
+        end_file = chr(ord('a') + self.end_col)
+        end_rank = str(8 - self.end_row)
+        return f"{start_file}{start_rank} -> {end_file}{end_rank}"
 
 # _____________________ подсветка фигур под боем и шаха ____________________
 class Board:
@@ -571,10 +571,7 @@ class Board:
         self.board = [[None for _ in range(8)] for _ in range(8)]
         self.setup_pieces()
         self.current_turn = "white"
-        # self.under_attack = [[False for _ in range(8)] for _ in range(8)] 
-        # под прицелом
-        # self.move_history = []
-        # для информации истории ходов
+        self.move_history = []
     
     def setup_pieces(self):
         for i in range(8):
@@ -586,52 +583,19 @@ class Board:
         for i, piece_class in enumerate(pieces_order):
             self.board[0][i] = piece_class("black", 0, i)
             self.board[7][i] = piece_class("white", 7, i)
-        
-        # ______________ Добавление новых фигур на доску (для 1) ________________
-        # self.board[0][2] = Flamingo("black", 0, 2)
-        # self.board[7][2] = Flamingo("white", 7, 2)
-        # self.board[0][5] = Hippo("black", 0, 5)
-        # self.board[7][5] = Hippo("white", 7, 5)
-        # self.board[0][3] = Oxelot("black", 0, 3)
-        # self.board[7][3] = Oxelot("white", 7, 3)
     
     def display(self):
-
-        # self.update_under_attack() 
-        # для списка фигур под боем
-
-        print("  a b c d e f g h")
+        print("\n  a b c d e f g h")
         for row in range(8):
             print(8 - row, end=" ")
             for col in range(8):
                 piece = self.board[row][col]
                 if piece:
                     print(piece.get_symbol(), end=" ")
-
-                    # для фигуры под боем в квадратных скобках убираем строчку выше и добавляем:
-                    # symbol = piece.get_symbol()
-                    # if self.under_attack[row][col]:
-                        # print(f"[{symbol}]", end=" ")
-                    # else:
-                        # print(f" {symbol} ", end=" ")
-
                 else:
                     print(".", end=" ")
             print(8 - row)
-        print("  a b c d e f g h")
-
-    # новый метод, который обновляет under_attack, где хранятся фигуры под прицелом
-    # def update_under_attack(self):
-        # self.under_attack = [[False for _ in range(8)] for _ in range(8)]
-        
-        # for row in range(8):
-            # for col in range(8):
-                # piece = self.get_piece(row, col)
-                # if piece:
-                    # for end_row in range(8):
-                        # for end_col in range(8):
-                            # if piece.is_valid_move(row, col, end_row, end_col, self):
-                                # self.under_attack[end_row][end_col] = True
+        print("  a b c d e f g h\n")
     
     def get_piece(self, row, col):
         if 0 <= row < 8 and 0 <= col < 8:
@@ -657,38 +621,36 @@ class Board:
             return False
         
         if piece.is_valid_move(start_row, start_col, end_row, end_col, self):
-            # сохраняем информацию о коде для отката
-            # captured_piece = target
-            # move = Move(start_row, start_col, end_row, end_col, piece, captured_piece)
+            captured_piece = target
+            move = Move(start_row, start_col, end_row, end_col, piece, captured_piece)
+            
             self.set_piece(end_row, end_col, piece)
             self.set_piece(start_row, start_col, None)
-            # сохраняем код в историю
-            # self.move_history.append(move)
-            # обновляеи флаг has_moved для фигуры
-            # piece.has_moved = True
+            
+            self.move_history.append(move)
+            piece.has_moved = True
+            
             self.current_turn = "black" if self.current_turn == "white" else "white"
             return True
         return False
     
-    # метод для отката хода
-    # def undo_move(self):
-        # if not self.move_history:
-            # print("Нет ходов для отката!")
-            # return False
-        # последний ход из истории
-        # last_move = self.move_history.pop()
-        # восстановление флага has_moved для фигуры
-        # last_move.piece.has_moved = last_move.piece_has_moved
-        # перемещение фигуры обратно
-        # self.set_piece(last_move.start_row, last_move.start_col, last_move.piece)
-        # self.set_piece(last_move.end_row, last_move.end_col, None)
-        # если была съедена фигура, восстанавливаем
-        # if last_move.captured_piece:
-            # self.set_piece(last_move.end_row, last_move.end_col, last_move.captured_piece)
-        # меняем ход обратно
-        # self.current_turn = "black" if self.current_turn == "white" else "white"
-        # print(f"Откат выполнен! Отменён ход: {last_move.get_coordinates_string()}")
-        # return True
+    def undo_move(self):
+        if not self.move_history:
+            print("Нет ходов для отката!")
+            return False
+        
+        last_move = self.move_history.pop()
+        last_move.piece.has_moved = last_move.piece_has_moved
+        
+        self.set_piece(last_move.start_row, last_move.start_col, last_move.piece)
+        self.set_piece(last_move.end_row, last_move.end_col, None)
+        
+        if last_move.captured_piece:
+            self.set_piece(last_move.end_row, last_move.end_col, last_move.captured_piece)
+        
+        self.current_turn = "black" if self.current_turn == "white" else "white"
+        print(f"Откат выполнен! Отменён ход: {last_move.get_coordinates_string()}")
+        return True
     
     def is_check(self, color):
         king_pos = self.find_king(color)
@@ -720,12 +682,16 @@ class Board:
                 if piece and piece.color == color:
                     for end_row in range(8):
                         for end_col in range(8):
+                            if row == end_row and col == end_col:
+                                continue
+                            
                             if piece.is_valid_move(row, col, end_row, end_col, self):
                                 target = self.get_piece(end_row, end_col)
                                 if target and target.color == color:
                                     continue
-                                start_piece = self.get_piece(row, col)
-                                end_piece = self.get_piece(end_row, end_col)
+                                
+                                start_piece = piece
+                                end_piece = target
                                 
                                 self.set_piece(end_row, end_col, start_piece)
                                 self.set_piece(row, col, None)
@@ -769,15 +735,15 @@ class Game:
     
     def run(self):
         print("ШАХМАТЫ")
-        # print("Фигуры в [скобках] находятся под боем")
-        # print("ШАХ выделяется отдельной строкой")
-        # print("Доп. команда:")
-        # print("'undo' - отменить последний ход")
+        print("Фигуры в [скобках] находятся под боем")
+        print("ШАХ выделяется отдельной строкой")
+        print("Доп. команда:")
+        print("'undo' - отменить последний ход")
         
         while True:
             self.board.display()
 
-            # is_check_now = self.board.is_check(self.board.current_turn)
+            is_check_now = self.board.is_check(self.board.current_turn)
             
             if self.board.is_checkmate(self.board.current_turn):
                 winner = "черные" if self.board.current_turn == "white" else "белые"
@@ -791,10 +757,10 @@ class Game:
             if self.board.is_check(self.board.current_turn):
                 print("шах")
 
-            # if is_check_now:
-                # print("_" * 20)
-                # print("ШАХ КОРОЛЮ")
-                # print("_" * 20)
+            if is_check_now:
+                print("_" * 20)
+                print("ШАХ КОРОЛЮ")
+                print("_" * 20)
             
             print(f"ход {self.board.current_turn}")
             
@@ -802,9 +768,9 @@ class Game:
             if start_input.lower() == "exit":
                 break
 
-            # if start_input.lower() == "undo":
-                # self.board.undo_move()
-                # continue
+            if start_input.lower() == "undo":
+                self.board.undo_move()
+                continue
             
             start_pos = self.parse_position(start_input)
             if not start_pos:
@@ -824,9 +790,9 @@ class Game:
             
             end_input = input("введите координаты хода: куда переместить фигуру (например, e4): ")
             
-            # if end_input.lower() == "undo":
-                # self.board.undo_move()
-                # continue
+            if end_input.lower() == "undo":
+                self.board.undo_move()
+                continue
 
             end_pos = self.parse_position(end_input)
             if not end_pos:
